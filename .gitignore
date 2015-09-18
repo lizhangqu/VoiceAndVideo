@@ -2,3 +2,7 @@
 /Easemob/.gradle
 /Easemob/*.iml
 /Easemob/app/app.iml
+/Tencent/.idea
+/Tencent/.gradle
+/Tencent/app/*.iml
+/Tencent/*.iml
