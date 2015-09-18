@@ -22,6 +22,7 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 
 import cn.edu.zafu.tencent.R;
+import cn.edu.zafu.tencent.model.LoginModel;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -29,15 +30,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final Gson gson=new Gson();
     private EditText username,password,to;
     private Button register,login,logout,video,voice;
+
+    private String sign=null;
     private Handler mHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case REGISTER:
-                    break;
                 case LOGIN:
-                    break;
-                case VIDEO:
+                    LoginModel bean= (LoginModel) msg.obj;
+                    if (bean.getStatus()==200){
+                        sign=bean.getMessage();
+                        //保存sign
+                        Toast.makeText(getApplicationContext(),"登录成功！",Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"登录失败！"+bean.getMessage(),Toast.LENGTH_LONG).show();
+                    }
                     break;
                 default:
                     break;
@@ -45,9 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.handleMessage(msg);
         }
     };
-    private static final int REGISTER=0x01;
-    private static final int LOGIN=0x02;
-    private static final int VIDEO=0x03;
+    private static final int LOGIN=0x01;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return ;
         }
         //独立账号体系，这里由自己服务器进行注册
-
+        Toast.makeText(getApplicationContext(),"注册逻辑由自己服务器实现，这里是空实现",Toast.LENGTH_LONG).show();
 
     }
 
@@ -121,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .add("username",u)
                 .add("password",p)
                 .build();
-        String url="http://10.0.0.24/huanxin/index.php";
+        String url="http://10.0.0.24/tencent/index.php";
         Request request=new Request.Builder().url(url).post(requestBody).build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -131,7 +136,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponse(Response response) throws IOException {
                 String result=response.body().string();
-
+                LoginModel bean=gson.fromJson(result,LoginModel.class);
+                Message message=Message.obtain();
+                message.obj=bean;
+                message.what=LOGIN;
+                mHandler.sendMessage(message);
             }
         });
 

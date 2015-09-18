@@ -45,10 +45,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(getApplicationContext(),"注册失败！"+bean.getMessage(),Toast.LENGTH_LONG).show();
                     }
                     break;
-                case LOGIN:
-                    break;
-                case VIDEO:
-                    break;
                 default:
                     break;
             }
@@ -56,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
     private static final int REGISTER=0x01;
-    private static final int LOGIN=0x02;
-    private static final int VIDEO=0x03;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
