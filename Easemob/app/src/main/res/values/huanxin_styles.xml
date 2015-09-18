@@ -1,0 +1,12 @@
+<resources>
+    <style name="nornal_style" parent="android:Theme.NoTitleBar"></style>
+    <style name="horizontal_slide" parent="android:Theme.NoTitleBar">
+        <item name="android:windowAnimationStyle">@style/AnimFade2</item>
+    </style>
+    <style name="AnimFade2" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_from_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_to_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_to_right</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_from_left</item>
+    </style>
+</resources>
