@@ -7,7 +7,7 @@ import android.util.Log;
 import com.tencent.av.sdk.AVInvitation;
 import com.tencent.av.sdk.AVRoom;
 
-import cn.edu.zafu.tencent.QavsdkApplication;
+import cn.edu.zafu.tencent.app.App;
 import cn.edu.zafu.tencent.util.Util;
 
 class AVInvitationControl {
@@ -25,7 +25,7 @@ class AVInvitationControl {
 		protected void onInvitationReceived(String identifier, long roomId,
 				int avMode) {
 			super.onInvitationReceived(identifier, roomId, avMode);
-			QavsdkControl qavsdkControl = ((QavsdkApplication) mContext)
+			QavsdkControl qavsdkControl = ((App) mContext)
 					.getQavsdkControl();
 			qavsdkControl.setRoomId(roomId);
 			qavsdkControl.setPeerIdentifier(identifier);
@@ -82,7 +82,7 @@ class AVInvitationControl {
 		protected void onComplete(int result) {
 			super.onComplete(result);
 			mIsInAccept = false;
-			QavsdkControl qavsdkControl = ((QavsdkApplication) mContext)
+			QavsdkControl qavsdkControl = ((App) mContext)
 					.getQavsdkControl();
 			long roomId = qavsdkControl.getRoomId();
 			String peerIdentifier = qavsdkControl.getPeerIdentifier();
@@ -124,7 +124,7 @@ class AVInvitationControl {
 	}
 
 	void invite() {
-		QavsdkControl qavsdkControl = ((QavsdkApplication) mContext)
+		QavsdkControl qavsdkControl = ((App) mContext)
 				.getQavsdkControl();
 		mAVInvitation.invite(qavsdkControl.getPeerIdentifier(),
 				qavsdkControl.getRoomId(), mAVInvitationInviteCompleteCallback);
@@ -132,7 +132,7 @@ class AVInvitationControl {
 	}
 
 	void accept() {
-		QavsdkControl qavsdkControl = ((QavsdkApplication) mContext)
+		QavsdkControl qavsdkControl = ((App) mContext)
 				.getQavsdkControl();
 		String peerIdentifier = qavsdkControl.getPeerIdentifier();
 		Log.e(TAG, "WL_DEBUG accept peerIdentifier = " + peerIdentifier);
@@ -141,7 +141,7 @@ class AVInvitationControl {
 	}
 
 	void refuse() {
-		QavsdkControl qavsdkControl = ((QavsdkApplication) mContext)
+		QavsdkControl qavsdkControl = ((App) mContext)
 				.getQavsdkControl();
 		String peerIdentifier = qavsdkControl.getPeerIdentifier();
 		Log.e(TAG, "WL_DEBUG refuse peerIdentifier = " + peerIdentifier);

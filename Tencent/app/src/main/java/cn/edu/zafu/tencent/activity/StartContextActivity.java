@@ -10,8 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -21,7 +19,7 @@ import com.tencent.av.sdk.AVConstants;
 
 import java.util.ArrayList;
 
-import cn.edu.zafu.tencent.QavsdkApplication;
+import cn.edu.zafu.tencent.app.App;
 import cn.edu.zafu.tencent.R;
 import cn.edu.zafu.tencent.control.QavsdkControl;
 import cn.edu.zafu.tencent.util.Util;
@@ -85,7 +83,7 @@ public class StartContextActivity extends ListActivity {
 		intentFilter.addAction(Util.ACTION_START_CONTEXT_COMPLETE);
 		intentFilter.addAction(Util.ACTION_CLOSE_CONTEXT_COMPLETE);	
 		registerReceiver(mBroadcastReceiver, intentFilter);
-		mQavsdkControl = ((QavsdkApplication) getApplication()).getQavsdkControl();
+		mQavsdkControl = ((App) getApplication()).getQavsdkControl();
 		Log.e(TAG, "=Test=WL_DEBUG StartContextActivity onCreate");
 	}
 
@@ -117,8 +115,7 @@ public class StartContextActivity extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		if (position == (l.getAdapter().getCount()-1)) {
-			startActivityForResult(new Intent(this, AddNewQQActivity.class),
-					REQUEST_CODE_ADD);
+			//startActivityForResult(new Intent(this, AddNewQQActivity.class),REQUEST_CODE_ADD);
 		} else {
 			if (!mQavsdkControl.hasAVContext()) {
 				if (!mQavsdkControl.isDefaultAppid()) {
@@ -205,32 +202,6 @@ public class StartContextActivity extends ListActivity {
 		default:
 			break;
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		boolean result = false;
-
-		switch (item.getItemId()) {
-		case R.id.action_add:
-			startActivityForResult(new Intent(this, AddNewQQActivity.class),
-					REQUEST_CODE_ADD);
-			break;
-		case R.id.uid_add:
-			startActivityForResult(new Intent(this, ModifyAppidUidActivity.class),
-					REQUEST_CODE_ADD);
-			break;			
-		default:
-			break;
-		}
-
-		return result;
 	}
 
 	private void refreshWaitingDialog() {

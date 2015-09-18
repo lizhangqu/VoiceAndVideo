@@ -9,7 +9,7 @@ import com.tencent.av.sdk.AVVideoCtrl;
 import com.tencent.av.sdk.AVVideoCtrl.EnableCameraCompleteCallback;
 import com.tencent.av.sdk.AVVideoCtrl.SwitchCameraCompleteCallback;
 
-import cn.edu.zafu.tencent.QavsdkApplication;
+import cn.edu.zafu.tencent.app.App;
 import cn.edu.zafu.tencent.util.Util;
 
 public class AVVideoControl {
@@ -76,7 +76,7 @@ public class AVVideoControl {
 		int result = AVConstants.AV_ERROR_OK;
 
 		if (mIsEnableCamera != isEnable) {
-			QavsdkControl qavsdk = ((QavsdkApplication) mContext)
+			QavsdkControl qavsdk = ((App) mContext)
 					.getQavsdkControl();
 			AVVideoCtrl avVideoCtrl = qavsdk.getAVContext().getVideoCtrl(
 					AVConstants.AV_VIDEO_CHANNEL_MAIN);
@@ -93,7 +93,7 @@ public class AVVideoControl {
 		int result = AVConstants.AV_ERROR_OK;
 
 		if (mIsFrontCamera != isFront) {
-			QavsdkControl qavsdk = ((QavsdkApplication) mContext)
+			QavsdkControl qavsdk = ((App) mContext)
 					.getQavsdkControl();
 			AVVideoCtrl avVideoCtrl = qavsdk.getAVContext().getVideoCtrl(
 					AVConstants.AV_VIDEO_CHANNEL_MAIN);
@@ -107,14 +107,14 @@ public class AVVideoControl {
 	}
 	
 	void setRotation(int rotation) {
-		QavsdkControl qavsdk = ((QavsdkApplication) mContext).getQavsdkControl();
+		QavsdkControl qavsdk = ((App) mContext).getQavsdkControl();
 		AVVideoCtrl avVideoCtrl = qavsdk.getAVContext().getVideoCtrl(AVConstants.AV_VIDEO_CHANNEL_MAIN);
 		avVideoCtrl.setRotation(rotation);
 		Log.e(TAG, "WL_DEBUG setRotation rotation = " + rotation);
 	}
 	
 	String getQualityTips() {
-		QavsdkControl qavsdk = ((QavsdkApplication) mContext).getQavsdkControl();
+		QavsdkControl qavsdk = ((App) mContext).getQavsdkControl();
 		AVVideoCtrl avVideoCtrl = qavsdk.getAVContext().getVideoCtrl(AVConstants.AV_VIDEO_CHANNEL_MAIN);
 		return avVideoCtrl.GetQualityTips();
 	}	

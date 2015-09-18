@@ -12,7 +12,7 @@ import com.tencent.av.sdk.AVConstants;
 import com.tencent.av.sdk.AVContext;
 import com.tencent.openqq.IMSdkInt;
 
-import cn.edu.zafu.tencent.QavsdkApplication;
+import cn.edu.zafu.tencent.app.App;
 import cn.edu.zafu.tencent.util.Util;
 
 class AVContextControl {
@@ -33,7 +33,7 @@ class AVContextControl {
 		public void OnComplete(int result) {
 			mIsInStartContext = false;
 			if (result == AVConstants.AV_ERROR_OK) {
-				QavsdkControl qavsdkControl = ((QavsdkApplication) mContext).getQavsdkControl();
+				QavsdkControl qavsdkControl = ((App) mContext).getQavsdkControl();
 				qavsdkControl.initAVInvitation();			
 			}
 			
@@ -101,7 +101,7 @@ class AVContextControl {
 	void stopContext() {
 		if (hasAVContext()) {
 			Log.d(TAG, "WL_DEBUG stopContext");
-			QavsdkControl qavsdkControl = ((QavsdkApplication) mContext)
+			QavsdkControl qavsdkControl = ((App) mContext)
 				.getQavsdkControl();
 			qavsdkControl.uninitAVInvitation();
 			mIsInStopContext = true;			

@@ -10,7 +10,7 @@ import com.tencent.av.sdk.AVEndpoint;
 import com.tencent.av.sdk.AVRoom;
 import com.tencent.av.sdk.AVRoomPair;
 
-import cn.edu.zafu.tencent.QavsdkApplication;
+import cn.edu.zafu.tencent.app.App;
 import cn.edu.zafu.tencent.util.Util;
 
 class AVRoomControl {
@@ -36,7 +36,7 @@ class AVRoomControl {
 			
 			if(mIsCreateRoom)
 			{
-				QavsdkControl qavsdkControl = ((QavsdkApplication) mContext).getQavsdkControl();
+				QavsdkControl qavsdkControl = ((App) mContext).getQavsdkControl();
 				AVRoomPair roomPair = (AVRoomPair) qavsdkControl.getRoom();
 				if (roomPair != null && result == AVConstants.AV_ERROR_OK) {
 					mRoomId = roomPair.getRoomId();
@@ -81,7 +81,7 @@ class AVRoomControl {
 			
 			if(endpointCount == 0)return;
 			
-			QavsdkControl qavsdkControl = ((QavsdkApplication) mContext).getQavsdkControl();
+			QavsdkControl qavsdkControl = ((App) mContext).getQavsdkControl();
 			
 			String peerIdentifier = qavsdkControl.getPeerIdentifier();
 			boolean peerHasAudioOld = mPeerHasAudio;
@@ -149,7 +149,7 @@ class AVRoomControl {
 	 */
 	void enterRoom(long roomId, String peerIdentifier, boolean isVideo) {	
 		mIsCreateRoom = (roomId == 0 ? true : false);
-		QavsdkControl qavsdkControl = ((QavsdkApplication) mContext).getQavsdkControl();
+		QavsdkControl qavsdkControl = ((App) mContext).getQavsdkControl();
 		if ((qavsdkControl != null) && (qavsdkControl.getAVContext() != null)) {			
 			Log.e(TAG, "WL_DEBUG enterRoom peerIdentifier = " + peerIdentifier + ", roomId = " + roomId + ", isVideo = " + isVideo);
 			
@@ -178,7 +178,7 @@ class AVRoomControl {
 	/** 关闭房间 */
 	int exitRoom() {
 		Log.e(TAG, "WL_DEBUG exitRoom");
-		QavsdkControl qavsdk = ((QavsdkApplication) mContext).getQavsdkControl();
+		QavsdkControl qavsdk = ((App) mContext).getQavsdkControl();
 		if ((qavsdk != null) && (qavsdk.getAVContext() != null)) {
 			AVContext avContext = qavsdk.getAVContext();
 			int result = avContext.exitRoom();
@@ -217,7 +217,7 @@ class AVRoomControl {
 	}
 	
 	public void setNetType(int netType) {
-		QavsdkControl qavsdk = ((QavsdkApplication) mContext).getQavsdkControl();
+		QavsdkControl qavsdk = ((App) mContext).getQavsdkControl();
 		AVContext avContext = qavsdk.getAVContext();
 		AVRoomPair room = (AVRoomPair)avContext.getRoom();
 	}

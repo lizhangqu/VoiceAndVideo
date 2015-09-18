@@ -27,7 +27,7 @@ import com.tencent.av.opengl.utils.Utils;
 import com.tencent.av.sdk.AVConstants;
 import com.tencent.av.utils.QLog;
 
-import cn.edu.zafu.tencent.QavsdkApplication;
+import cn.edu.zafu.tencent.app.App;
 import cn.edu.zafu.tencent.R;
 import cn.edu.zafu.tencent.util.Util;
 
@@ -62,7 +62,7 @@ public class AVUIControl extends GLViewGroup {
 			mContext.sendBroadcast(new Intent(Util.ACTION_SURFACE_CREATED));
 			mCameraSurfaceCreated = true;
 
-			QavsdkControl qavsdk = ((QavsdkApplication) mContext).getQavsdkControl();
+			QavsdkControl qavsdk = ((App) mContext).getQavsdkControl();
 			qavsdk.getAVContext().setRenderMgrAndHolder(mGraphicRenderMgr, holder);
 		}
 
@@ -223,7 +223,7 @@ public class AVUIControl extends GLViewGroup {
 		mRotation = rotation;
 		mCacheRotation = rotation;
 		// layoutVideoView(true);
-		QavsdkControl qavsdk = ((QavsdkApplication) mContext).getQavsdkControl();
+		QavsdkControl qavsdk = ((App) mContext).getQavsdkControl();
 		if ((qavsdk != null) && (qavsdk.getAVVideoControl() != null)) {		
 			qavsdk.getAVVideoControl().setRotation(rotation);			
 		}
@@ -259,7 +259,7 @@ public class AVUIControl extends GLViewGroup {
 	}
 	
 	public String getQualityTips() {
-		QavsdkControl qavsdk = ((QavsdkApplication) mContext).getQavsdkControl();
+		QavsdkControl qavsdk = ((App) mContext).getQavsdkControl();
 		if ((qavsdk != null) && (qavsdk.getAVVideoControl() != null)) {		
 			return qavsdk.getAVVideoControl().getQualityTips();			
 		} else {

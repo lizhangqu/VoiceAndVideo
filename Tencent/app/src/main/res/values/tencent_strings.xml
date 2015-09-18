@@ -55,10 +55,6 @@
     <string name="action_add">添加一条测试号</string>
     <string name="uid_add">修改appid和uid</string>
     <string name="qq_prefix">昵称：</string>
-    <string name="openid_prefix">identifier：</string>
-    <string name="openkey_prefix">usersig：</string>
-    <string name="appid_prefix">appid：</string>
-    <string name="uid_prefix">uid：</string>
     <string name="at_on_camera">打开摄像头中</string>
     <string name="on_camera_failed">打开摄像头失败</string>
     <string name="at_off_camera">关闭摄像头中</string>

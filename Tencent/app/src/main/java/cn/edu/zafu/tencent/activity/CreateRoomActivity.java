@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.tencent.av.sdk.AVConstants;
 
-import cn.edu.zafu.tencent.QavsdkApplication;
+import cn.edu.zafu.tencent.app.App;
 import cn.edu.zafu.tencent.R;
 import cn.edu.zafu.tencent.control.QavsdkControl;
 import cn.edu.zafu.tencent.util.DialogWaitingAsyncTask;
@@ -228,7 +228,7 @@ public class CreateRoomActivity extends Activity implements OnClickListener {
 
 		int QQIdentifierIndex = getIntent()
 				.getIntExtra(Util.EXTRA_IDENTIFIER_LIST_INDEX, -1);
-		mQavsdkControl = ((QavsdkApplication) getApplication())
+		mQavsdkControl = ((App) getApplication())
 				.getQavsdkControl();
 
 		if (QQIdentifierIndex != -1 && mQavsdkControl.getAVContext() != null) {

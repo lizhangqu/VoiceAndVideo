@@ -29,7 +29,7 @@ import com.tencent.av.utils.PhoneStatusTools;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.edu.zafu.tencent.QavsdkApplication;
+import cn.edu.zafu.tencent.app.App;
 import cn.edu.zafu.tencent.R;
 import cn.edu.zafu.tencent.control.QavsdkControl;
 import cn.edu.zafu.tencent.util.MyCheckable;
@@ -258,7 +258,7 @@ public class AvActivity extends Activity implements OnClickListener {
 		registerReceiver(connectionReceiver, netIntentFilter);		
 		showDialog(DIALOG_INIT);
 
-		mQavsdkControl = ((QavsdkApplication) getApplication()).getQavsdkControl();
+		mQavsdkControl = ((App) getApplication()).getQavsdkControl();
 		int netType = Util.getNetWorkType(ctx);
 		Log.e(TAG, "WL_DEBUG connectionReceiver onCreate = " + netType);
 		mQavsdkControl.setNetType(Util.getNetWorkType(ctx));
