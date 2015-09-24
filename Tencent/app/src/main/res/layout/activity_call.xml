@@ -8,36 +8,22 @@
     tools:context="cn.edu.zafu.easemob.activity.MainActivity">
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/to"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="账号"
-        android:text="lizhangqu"
-        />
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="密码"
-        android:text="lizhangqu"
+        android:hint="对方账号"
+        android:text="lizhangqu1"
         />
     <Button
-        android:id="@+id/register"
+        android:id="@+id/voice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="注册"
+        android:text="语音"
         />
     <Button
-        android:id="@+id/login"
+        android:id="@+id/video"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="登录"
+        android:text="视频"
         />
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="退出"
-        />
-
 </LinearLayout>

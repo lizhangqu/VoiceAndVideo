@@ -34,20 +34,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.StartContextActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+        <activity android:name=".activity.CallActivity">
         </activity>
-        <activity
-            android:name=".activity.CreateRoomActivity"
-            android:label="@string/create_room"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AvActivity"
             android:configChanges="keyboardHidden|orientation|locale|screenSize"

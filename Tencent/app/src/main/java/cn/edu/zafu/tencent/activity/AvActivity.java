@@ -225,7 +225,7 @@ public class AvActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		ctx = this;
 		
-		setContentView(R.layout.av_activity);
+		setContentView(R.layout.activity_av);
 		findViewById(R.id.qav_bottombar_handfree).setOnClickListener(this);
 		findViewById(R.id.qav_bottombar_mute).setOnClickListener(this);
 		View cameraButton = findViewById(R.id.qav_bottombar_camera);

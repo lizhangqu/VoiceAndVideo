@@ -1,6 +1,9 @@
 package cn.edu.zafu.tencent.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,23 +36,17 @@ import cn.edu.zafu.tencent.util.Util;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final OkHttpClient mOkHttpClient=new OkHttpClient();
     private static final Gson gson=new Gson();
-    private EditText username,password,to;
-    private Button register,login,logout,video,voice;
+    private EditText username,password;
+    private Button register,login,logout;
 
 
     private QavsdkControl mQavsdkControl;
     private int mLoginErrorCode = AVConstants.AV_ERROR_OK;
 
 
-    private int mCreateRoomErrorCode = AVConstants.AV_ERROR_OK;
-    private int mCloseRoomErrorCode = AVConstants.AV_ERROR_OK;
-    private int mAcceptErrorCode = AVConstants.AV_ERROR_OK;
-    private int mInviteErrorCode = AVConstants.AV_ERROR_OK;
-    private int mRefuseErrorCode = AVConstants.AV_ERROR_OK;
-    private int mJoinRoomErrorCode = AVConstants.AV_ERROR_OK;
-
 
     private String sign=null;
+    private static final int LOGIN=0x01;
     private Handler mHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -60,7 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         sign=bean.getMessage();
                         //保存sign
                         Log.e("TAG","sign:"+sign);
-                        Toast.makeText(getApplicationContext(),"登录成功！",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"登录成功,请稍后！",Toast.LENGTH_LONG).show();
+                        startTencentContext();
                     }else{
                         Toast.makeText(getApplicationContext(),"登录失败！"+bean.getMessage(),Toast.LENGTH_LONG).show();
                     }
@@ -71,31 +69,87 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.handleMessage(msg);
         }
     };
-    private static final int LOGIN=0x01;
+
+    private void startTencentContext() {
+        //发起音视频前需要向腾讯服务器验证。
+        String u=username.getText().toString();
+        String p=password.getText().toString();
+        if (TextUtils.isEmpty(u)||TextUtils.isEmpty(p)){
+            Toast.makeText(getApplicationContext(),"账号或密码不能为空！",Toast.LENGTH_LONG).show();
+            return ;
+        }
+        if(TextUtils.isEmpty(sign)){
+            Toast.makeText(MainActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+            return ;
+        }
+        if (!mQavsdkControl.hasAVContext()) {
+            if (!mQavsdkControl.isDefaultAppid()) {
+                Toast.makeText(getApplicationContext(), getString(R.string.help_msg_appid_not_default), Toast.LENGTH_LONG).show();
+            }
+            if (!mQavsdkControl.isDefaultUid()) {
+                Toast.makeText(getApplicationContext(), getString(R.string.help_msg_uid_not_default), Toast.LENGTH_LONG).show();
+            }
+            mLoginErrorCode = mQavsdkControl.startContext(u, sign);
+
+            if (mLoginErrorCode != AVConstants.AV_ERROR_OK) {
+                Toast.makeText(getApplicationContext(),"错误码:"+mLoginErrorCode, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private BroadcastReceiver mStartContextBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log.e("TAG", "WL_DEBUG onReceive action = " + action);
+            Log.e("TAG", "WL_DEBUG ANR StartContextActivity onReceive action = " + action + " In");
+            if (action.equals(Util.ACTION_START_CONTEXT_COMPLETE)) {
+                mLoginErrorCode = intent.getIntExtra( Util.EXTRA_AV_ERROR_RESULT, AVConstants.AV_ERROR_OK);
+                if (mLoginErrorCode == AVConstants.AV_ERROR_OK) {
+                    Intent i=new Intent(MainActivity.this,CallActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putString("from",username.getText().toString());
+                    i.putExtras(bundle);
+                    startActivity(i);
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.help_msg_login_error), Toast.LENGTH_LONG).show();
+
+                }
+            } else if (action.equals(Util.ACTION_CLOSE_CONTEXT_COMPLETE)) {
+
+            }
+            Log.e("TAG", "WL_DEBUG ANR StartContextActivity onReceive action = " + action + " Out");
+        }
+    };
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initView();
-
+        initStartContextBroadcast();
         mQavsdkControl = ((App) getApplication()).getQavsdkControl();
+    }
+
+
+    private void initStartContextBroadcast() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Util.ACTION_START_CONTEXT_COMPLETE);
+        intentFilter.addAction(Util.ACTION_CLOSE_CONTEXT_COMPLETE);
+        registerReceiver(mStartContextBroadcastReceiver, intentFilter);
     }
 
     private void initView() {
         username= (EditText) findViewById(R.id.username);
         password= (EditText) findViewById(R.id.password);
-        to= (EditText) findViewById(R.id.to);
         register= (Button) findViewById(R.id.register);
         login= (Button) findViewById(R.id.login);
         logout= (Button) findViewById(R.id.logout);
-        video= (Button) findViewById(R.id.video);
-        voice= (Button) findViewById(R.id.voice);
         register.setOnClickListener(this);
         login.setOnClickListener(this);
         logout.setOnClickListener(this);
-        video.setOnClickListener(this);
-        voice.setOnClickListener(this);
     }
 
     @Override
@@ -109,12 +163,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.logout:
                 logout();
-                break;
-            case R.id.voice:
-                voice();
-                break;
-            case R.id.video:
-                video();
                 break;
             default:
                 break;
@@ -176,58 +224,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void voice() {
-        //发起音视频前需要向腾讯服务器验证。
-        String toUser=to.getText().toString();
-        String u=username.getText().toString();
-        String p=password.getText().toString();
-        if (TextUtils.isEmpty(u)||TextUtils.isEmpty(p)){
-            Toast.makeText(getApplicationContext(),"账号或密码不能为空！",Toast.LENGTH_LONG).show();
-            return ;
-        }
-        if (TextUtils.isEmpty(toUser)){
-            Toast.makeText(MainActivity.this, "请填写接受方账号", Toast.LENGTH_SHORT).show();
-            return ;
-        }
-        if (!mQavsdkControl.hasAVContext()) {
-            if (!mQavsdkControl.isDefaultAppid()) {
-                Toast.makeText(getApplicationContext(), getString(R.string.help_msg_appid_not_default), Toast.LENGTH_LONG).show();
-            }
-            if (!mQavsdkControl.isDefaultUid()) {
-                Toast.makeText(getApplicationContext(), getString(R.string.help_msg_uid_not_default), Toast.LENGTH_LONG).show();
-            }
-            mLoginErrorCode = mQavsdkControl.startContext(u, sign);
 
-            if (mLoginErrorCode != AVConstants.AV_ERROR_OK) {
-                Toast.makeText(getApplicationContext(),"错误码:"+mLoginErrorCode, Toast.LENGTH_LONG).show();
-            }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mStartContextBroadcastReceiver != null) {
+            unregisterReceiver(mStartContextBroadcastReceiver);
         }
+
     }
-
-    private void video() {
-        //发起音视频前需要向腾讯服务器验证。
-        String toUser=to.getText().toString();
-        if (TextUtils.isEmpty(toUser)){
-            Toast.makeText(MainActivity.this, "请填写接受方账号", Toast.LENGTH_SHORT).show();
-            return ;
-        }
-    }
-
-
-
-    private void startActivity(String mReceiveIdentifier,String mSelfIdentifier) {
-        Log.e("TAG", "WL_DEBUG startActivity");
-        if ((mQavsdkControl != null) && (mQavsdkControl.getAVContext() != null) && (mQavsdkControl.getAVContext().getAudioCtrl() != null)) {
-            mQavsdkControl.getAVContext().getAudioCtrl().startTRAEService();
-        }
-        startActivityForResult(
-                new Intent(Intent.ACTION_MAIN)
-                        .putExtra(Util.EXTRA_IDENTIFIER, mReceiveIdentifier)
-                        .putExtra(Util.EXTRA_SELF_IDENTIFIER, mSelfIdentifier)
-                        .setClass(this, AvActivity.class),
-                0);
-    }
-
 
 
 }
